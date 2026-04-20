@@ -57,7 +57,10 @@ fi
 
 # ── Limpiar y copiar contenido nuevo ──────────────────────────────────────
 
-find . -maxdepth 1 ! -name '.git' ! -name '.' -exec rm -rf {} +
+# Limpiar todo excepto .git (compatible con Windows/Git Bash)
+for item in *; do
+    rm -rf "$item"
+done
 cp -r "$tmp"/* .
 
 # ── Commitear ──────────────────────────────────────────────────────────────
