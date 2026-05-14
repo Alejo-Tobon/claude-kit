@@ -40,13 +40,16 @@ El kit tiene su propio `.claude/` para desarrollo (separado del contenido distri
 │   │   ├── kit-security-auditor.md
 │   │   ├── consistency-checker.md
 │   │   └── kit-researcher.md
+│   ├── commands/
+│   │   └── verify-kit.md
 │   ├── skills/
 │   │   ├── git/SKILL.md
 │   │   ├── prompt-quality/SKILL.md
 │   │   ├── consistency-check/SKILL.md
 │   │   └── release/SKILL.md
-│   └── scripts/
-│       └── release-dist.sh
+│   ├── scripts/
+│   │   └── release-dist.sh
+│   └── settings.json
 ├── agents/              ← contenido distribuible
 ├── commands/
 ├── hooks/
@@ -58,7 +61,7 @@ El kit tiene su propio `.claude/` para desarrollo (separado del contenido distri
 
 El contenido distribuible (agents/, commands/, hooks/, skills/, settings.json.template) vive en la **raíz del repo** — NO dentro de `.claude/`. Esto es intencional.
 
-**Rama `main`:** desarrollo completo del kit (incluye CLAUDE.md, README, futuro .claude/ propio, tests, CI).
+**Rama `main`:** desarrollo completo del kit (incluye CLAUDE.md, README, `.claude/` propio del kit, scripts de release).
 
 **Rama `dist`:** solo el contenido que va a `.claude/` del proyecto consumidor, aplanado en la raíz. El consumidor hace:
 ```bash
