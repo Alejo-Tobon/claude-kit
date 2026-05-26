@@ -133,6 +133,7 @@ con `/create-skill [nombre]`.
 | `/document-decision [texto]` | Registrar una decisión en el CLAUDE.md |
 | `/review-claude-md` | Auditar el CLAUDE.md actual |
 | `/spec-from-requirements [archivo]` | Convertir un doc de requerimientos en spec para los agentes |
+| `/cost-report` | Reporte de tokens y costos estimados del proyecto |
 
 ### Hooks — `hooks/`
 
@@ -140,7 +141,14 @@ con `/create-skill [nombre]`.
 |---|---|---|
 | `security_guard.py` | PreToolUse | Bloquea patrones peligrosos antes del write |
 | `post_write.py` | PostToolUse | Formatea el archivo después del write |
-| `context_guardian.py` | Stop | Avisa al 55% y bloquea al 70% de contexto |
+| `context_guardian.py` | Stop | Avisa al 55%/65% de la ventana del modelo (lee el transcript). Advertencia pura, sin bloqueo |
+
+Además, en `hooks/` viven dos utilidades python que **no son hooks de evento**:
+
+| Utilidad | Para qué |
+|---|---|
+| `model_info.py` | Tabla de modelos: ventana de contexto y precios (mantenimiento manual, con fecha de verificación) |
+| `cost_report.py` | Parser de transcripts que estima costo; lo invoca `/cost-report` |
 
 ### `settings.json`
 
@@ -148,6 +156,10 @@ Permisos de Bash y configuración de hooks.
 Si el proyecto necesita permisos adicionales
 (ej: `docker`, `cargo`, etc.), editarlos directamente
 en `.claude/settings.json`.
+
+La compactación automática de contexto se controla con la variable de
+entorno `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE` (1–100, default 95) en el bloque
+`env` de `settings.json`.
 
 ---
 
@@ -221,11 +233,14 @@ commands/
 ├── phase-start.md
 ├── document-decision.md
 ├── review-claude-md.md
-└── spec-from-requirements.md
+├── spec-from-requirements.md
+└── cost-report.md
 hooks/
 ├── security_guard.py
 ├── post_write.py
-└── context_guardian.py
+├── context_guardian.py
+├── model_info.py          # utilidad (no es hook de evento)
+└── cost_report.py         # utilidad (no es hook de evento)
 skills/
 ├── skill-structure/SKILL.md
 ├── project-setup/SKILL.md

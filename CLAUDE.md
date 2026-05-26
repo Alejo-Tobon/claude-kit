@@ -9,7 +9,7 @@ Kit de configuración base de Claude Code para estandarizar el trabajo con agent
 ## Stack
 
 - **Markdown** — agents, commands, skills
-- **Python 3.10+** — hooks (security_guard, post_write, context_guardian)
+- **Python 3.10+** — hooks (security_guard, post_write, context_guardian) y utilidades (model_info, cost_report)
 - **JSON** — settings.json.template (permisos y configuración de hooks)
 - **Git** — distribución via submodule, rama `dist` para contenido limpio
 
@@ -17,8 +17,8 @@ Kit de configuración base de Claude Code para estandarizar el trabajo con agent
 
 ```
 ├── agents/              ← plantillas de agentes (5)
-├── commands/            ← slash commands (8)
-├── hooks/               ← hooks Python (3)
+├── commands/            ← slash commands (9)
+├── hooks/               ← hooks (3) + utilidades (model_info, cost_report)
 ├── skills/              ← skills con SKILL.md (5)
 │   ├── skill-structure/
 │   ├── project-setup/
@@ -125,6 +125,16 @@ Actualizar con `cd .claude && git pull`.
 - Exit 0 = OK, Exit 2 = bloqueo
 - Stdout va al contexto del agente, stderr al usuario
 - Timeout máximo definido en settings.json.template
+- El payload del evento `Stop` trae `transcript_path` pero NO uso de
+  tokens/costo. `context_guardian.py` lee el uso real del transcript
+  (suma input + cache_read + cache_creation del último mensaje) y avisa
+  a 55%/65% de la ventana del modelo. Es advertencia pura, sin bloqueo.
+- `model_info.py` y `cost_report.py` viven en `hooks/` pero NO son hooks
+  de evento: son utilidades (data de modelos / parser de costos para
+  `/cost-report`). Es el único lugar python distribuible del kit.
+- La compactación automática se controla con la env var
+  `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE` en settings (no con `autoCompactThreshold`,
+  que no es una setting real).
 
 ## Qué incluir en la rama dist
 
@@ -159,6 +169,9 @@ Actualizar con `cd .claude && git pull`.
 | 2026-04-15 | settings.json.template como nombre | El consumidor lo renombra a settings.json; evita que se aplique accidentalmente en el repo del kit |
 | 2026-04-16 | settings.json editable directamente, sin settings.local.json | Uso personal — si se necesita un cambio puntual se edita directo; si aplica a todos los proyectos se pushea al kit. Sin capa extra de indirección |
 | 2026-04-16 | Dos modos de instalación: submodule (con ignore=dirty) o clone+gitignore | Submodule para tracking de versión, clone+gitignore para simplicidad. Ambos usan rama dist |
+| 2026-05-26 | Observabilidad de costo on-demand (`/cost-report`), sin hook de tracking | El payload de Stop no trae tokens/costo; el transcript ya es la fuente de verdad. Parsearlo on-demand evita duplicar datos y la lógica de dedup |
+| 2026-05-26 | `context_guardian` lee el transcript en vez del payload | El payload de Stop no expone uso de contexto; antes el hook era un no-op silencioso |
+| 2026-05-26 | Compactación via `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE`, no `autoCompactThreshold` | `autoCompactThreshold` no es una setting real, se ignoraba |
 
 ## Mantenimiento
 
