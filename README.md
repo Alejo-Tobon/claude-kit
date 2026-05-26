@@ -115,6 +115,7 @@ y crea solo los relevantes para el tipo de proyecto.
 | `project-setup` | Estándar del CLAUDE.md y proceso de setup |
 | `explore-module` | Analizar un módulo o proyecto pequeño |
 | `explore-large` | Analizar repos grandes o monorepos |
+| `requirements-to-spec` | Convertir un doc de requerimientos en spec para los agentes |
 
 Las skills de dominio (node-api, security, testing, etc.)
 no están incluidas en el kit base — se crean por proyecto
@@ -131,6 +132,7 @@ con `/create-skill [nombre]`.
 | `/phase-start [número]` | Iniciar una fase del proyecto |
 | `/document-decision [texto]` | Registrar una decisión en el CLAUDE.md |
 | `/review-claude-md` | Auditar el CLAUDE.md actual |
+| `/spec-from-requirements [archivo]` | Convertir un doc de requerimientos en spec para los agentes |
 
 ### Hooks — `hooks/`
 
@@ -218,7 +220,8 @@ commands/
 ├── create-skill.md
 ├── phase-start.md
 ├── document-decision.md
-└── review-claude-md.md
+├── review-claude-md.md
+└── spec-from-requirements.md
 hooks/
 ├── security_guard.py
 ├── post_write.py
@@ -227,6 +230,7 @@ skills/
 ├── skill-structure/SKILL.md
 ├── project-setup/SKILL.md
 ├── explore-module/SKILL.md
-└── explore-large/SKILL.md
+├── explore-large/SKILL.md
+└── requirements-to-spec/SKILL.md
 settings.json.template
 ```

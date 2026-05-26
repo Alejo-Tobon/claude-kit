@@ -17,13 +17,14 @@ Kit de configuración base de Claude Code para estandarizar el trabajo con agent
 
 ```
 ├── agents/              ← plantillas de agentes (5)
-├── commands/            ← slash commands (7)
+├── commands/            ← slash commands (8)
 ├── hooks/               ← hooks Python (3)
-├── skills/              ← skills con SKILL.md (4)
+├── skills/              ← skills con SKILL.md (5)
 │   ├── skill-structure/
 │   ├── project-setup/
 │   ├── explore-module/
-│   └── explore-large/
+│   ├── explore-large/
+│   └── requirements-to-spec/
 ├── .claude/scripts/
 │   └── release-dist.sh  ← genera la rama dist desde main
 ├── settings.json.template
