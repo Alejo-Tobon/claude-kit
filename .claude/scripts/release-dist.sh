@@ -45,6 +45,10 @@ for dir in "${DIST_DIRS[@]}"; do
 done
 cp "$TEMPLATE" "$tmp/settings.json"
 
+# Quitar artefactos de Python que no deben distribuirse (los .pyc/__pycache__
+# se generan al ejecutar/validar hooks y no son parte del kit).
+rm -rf "$tmp"/hooks/__pycache__ "$tmp"/*/__pycache__ 2>/dev/null || true
+
 # ── Cambiar a rama dist ────────────────────────────────────────────────────
 
 if git show-ref --quiet refs/heads/dist; then

@@ -6,3 +6,7 @@
 
 # Config local de sesión (permisos personales, rutas de máquina)
 .claude/settings.local.json
+
+# Artefactos de Python
+__pycache__/
+*.pyc
