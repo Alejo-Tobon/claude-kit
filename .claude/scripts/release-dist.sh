@@ -51,21 +51,23 @@ if git show-ref --quiet refs/heads/dist; then
     git checkout dist
 else
     git checkout --orphan dist
-    git rm -rf . 2>/dev/null || true
-    git clean -fd 2>/dev/null || true
 fi
 
-# ── Limpiar y copiar contenido nuevo ──────────────────────────────────────
+# ── Reconstruir el contenido de dist ───────────────────────────────────────
 
-# Limpiar todo excepto .git (compatible con Windows/Git Bash)
-for item in *; do
-    rm -rf "$item"
-done
+# Vaciar el índice y borrar SOLO las carpetas distribuibles del working
+# tree. No tocar archivos ocultos/personales como .claude/ — borrarlos del
+# disco perdería skills personales (gitignored) que viven ahí.
+# Al stagear explícitamente solo el contenido distribuible, cualquier
+# untracked que persista del checkout (ej: .claude/) nunca entra al commit.
+git rm -r --cached . >/dev/null 2>&1 || true
+rm -rf agents commands hooks skills settings.json
+
 cp -r "$tmp"/* .
 
 # ── Commitear ──────────────────────────────────────────────────────────────
 
-git add -A
+git add agents commands hooks skills settings.json
 
 if git diff --cached --quiet 2>/dev/null; then
     echo "Sin cambios. dist ya está actualizada."
