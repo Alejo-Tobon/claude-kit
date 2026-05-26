@@ -1,2 +1,8 @@
 # Skills personales / de sistema — no forman parte del kit distribuible
 .claude/skills/functional-analyst/
+
+# Artefactos de runtime (logs de hooks, métricas)
+.claude/logs/
+
+# Config local de sesión (permisos personales, rutas de máquina)
+.claude/settings.local.json
