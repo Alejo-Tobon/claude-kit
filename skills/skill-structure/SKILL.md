@@ -101,7 +101,8 @@ agente active la skill automáticamente.
 ## Longitud y tono
 
 - **Longitud máxima:** ~150 líneas. Si supera eso,
-  la skill probablemente cubre demasiado — dividirla.
+  la skill probablemente cubre demasiado — dividirla,
+  o externalizar plantillas a `examples/` (ver abajo).
 - **Tono:** instrucciones directas al agente, no
   documentación para humanos. Usar imperativo.
   MAL: "Los endpoints deberían seguir el patrón REST"
@@ -109,31 +110,51 @@ agente active la skill automáticamente.
 - **Sin redundancia:** si una regla ya está en el
   CLAUDE.md del proyecto, no repetirla en la skill.
 
+### Plantillas largas: usar `examples/`
+
+Si hay plantillas de código extensas (típico en scaffolding), moverlas
+a `examples/` en vez de violar el límite. El SKILL.md describe el
+proceso y referencia las plantillas; el agente las lee al generar:
+
+```
+skills/{nombre}/
+├── SKILL.md          ← instrucciones, ≤150 líneas
+└── examples/
+    ├── router.ts
+    └── service.ts
+```
+
 ---
 
-## Versionado
+## Patrón para skills de scaffolding
 
-Incluir al final de cada skill:
-```
-## Versionado
-v1.0 — 2026-04-01 — versión inicial
-v1.1 — 2026-04-15 — agregado anti-patrón X
-```
+Para skills que generan código (servicios, páginas, clientes). No
+aplica a skills de proceso. Estructura de 5 fases + reglas finales:
+
+- **Fase 0 — Declarar rol:** "Actúo como generador… No invento
+  lógica… Marco con `// TODO:`". Ancla al agente.
+- **Fase 1 — Contexto en un bloque:** 3-8 ítems numerados, una sola
+  pregunta, esperar respuesta completa.
+- **Fase 2 — Plan y confirmación:** mostrar árbol de archivos antes
+  de escribir; pedir OK.
+- **Fase 3 — Generar:** crear archivos en orden; borrador en chat
+  para los que tienen lógica.
+- **Fase 4 — Verificar y cerrar:** listar generados + próximos pasos
+  manuales (tipos, lógica, i18n).
+- **Reglas finales:** sección enumerada con invariantes (patrones
+  obligatorios, anti-patrones, límites por archivo).
 
 ---
 
-## Proceso para crear una skill nueva
+## Cierre — versionado y registro
 
-1. Identificar el dominio — ¿qué conocimiento cubre?
-2. Definir 3-7 triggers representativos
-3. Escribir el frontmatter
-4. Escribir "Cuándo aplicar" (máximo 3 líneas)
-5. Escribir el contenido siguiendo las secciones
-   recomendadas que apliquen
-6. Verificar que no supera 150 líneas
-7. Agregar la referencia en `skills/README.md`
+Toda skill incluye al final un bloque `## Versionado` con
+`vX.Y — YYYY-MM-DD — descripción del cambio` (una línea por versión).
+Al crear una skill nueva, agregar también una línea de referencia en
+`skills/README.md` para que sea descubrible.
 
 ---
 
 ## Versionado
 v1.0 — 2026-04-01 — versión inicial del kit
+v1.1 — 2026-05-28 — patrón para skills de scaffolding + examples/ como escape de longitud
